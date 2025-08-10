@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DOM Inspector</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            width: 320px;
+            padding: 16px;
+            margin: 0;
+            background: #1e1e1e;
+            color: #ffffff;
+        }
+        h3 {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-container {
+            margin-bottom: 16px;
+            display: flex;
+            gap: 8px;
+        }
+        .tab {
+            padding: 8px 16px;
+            background: #252526;
+            border: 1px solid #333;
+            color: #888;
+            border-radius: 6px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+        .tab.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+        .section {
+            display: none;
+            margin-bottom: 16px;
+        }
+        .section.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #888;
+            font-size: 13px;
+        }
+        select, input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            background: #252526;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+        select:focus, input[type="text"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2563eb;
+            border: none;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .status {
+            font-size: 13px;
+            color: #888;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        /* AI Configuration Styles */
+        #test-ai-connection {
+            width: 100%;
+            padding: 8px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        #test-ai-connection:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+        }
+        #ai-status-message.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        #ai-status-message.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        #ai-status-message.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .ai-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e5e7eb;
+            border-top: 2px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        small {
+            display: block;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <h3>
+        <!-- <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM4 12h16"/>
+            <path d="M12 4v16"/>
+        </svg> -->
+        <img width="32" height="32" src="icons/icon.svg"/>
+        CSS Sherlock
+    </h3>
+
+    <div class="tab-container">
+        <div class="tab active" data-tab="inspector">Inspector</div>
+        <div class="tab" data-tab="settings">Settings</div>
+    </div>
+
+    <div id="inspector-section" class="section active">
+        <button id="activate">Activate Inspector</button>
+        <div class="status" id="status"></div>
+    </div>
+
+    <div id="settings-section" class="section">
+        <div class="form-group">
+            <label>Selection Style</label>
+            <select id="selection-style">
+                <option value="outline">Outline</option>
+                <option value="highlight">Highlight</option>
+                <option value="border">Border</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Custom Highlight Color</label>
+            <input type="text" id="highlight-color" placeholder="#2563eb" value="#2563eb">
+        </div>
+        <div class="form-group">
+            <label>AI Provider</label>
+            <select id="ai-provider">
+                <option value="none">None (Disable AI)</option>
+                <option value="openai">OpenAI (ChatGPT)</option>
+                <option value="gemini">Google Gemini</option>
+                <option value="claude">Anthropic Claude</option>
+                <option value="ollama">Local Ollama</option>
+            </select>
+        </div>
+        <div id="api-key-section" style="display: none;">
+            <div class="form-group">
+                <label>API Key</label>
+                <input type="password" id="ai-api-key" placeholder="Enter your API key">
+                <small style="color: #666; font-size: 11px;">Your API key is stored locally and never sent to third parties</small>
+            </div>
+        </div>
+        <div id="ollama-url-section" style="display: none;">
+            <div class="form-group">
+                <label>Ollama Base URL</label>
+                <input type="text" id="ollama-url" value="http://localhost:11434">
+            </div>
+        </div>
+        <div id="model-section" style="display: none;">
+            <div class="form-group">
+                <label>Model</label>
+                <select id="ai-model">
+                    <option value="">Select a model</option>
+                </select>
+            </div>
+        </div>
+        <div id="test-connection-section" style="display: none; margin-bottom: 16px;">
+            <button id="test-ai-connection" style="margin-bottom: 8px;">Test Connection</button>
+            <div id="ai-status-message" style="padding: 8px; border-radius: 4px; font-size: 12px; display: none;"></div>
+        </div>
+        <button id="save-settings">Save Settings</button>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

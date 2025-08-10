@@ -1,0 +1,297 @@
+#dom-inspector-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100vh;
+    background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-y: auto;
+    z-index: 2147483647;
+    box-shadow: -12px 0 40px rgba(0, 0, 0, 0.4);
+    border-left: 1px solid #404040;
+    animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(20px);
+}
+
+/* Scrollbar styling */
+#dom-inspector-sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+#dom-inspector-sidebar::-webkit-scrollbar-track {
+    background: #2a2a2a;
+}
+
+#dom-inspector-sidebar::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+#dom-inspector-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+@keyframes slideIn {
+    from { 
+        transform: translateX(100%); 
+        opacity: 0;
+    }
+    to { 
+        transform: translateX(0); 
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from { 
+        transform: translateX(0); 
+        opacity: 1;
+    }
+    to { 
+        transform: translateX(100%); 
+        opacity: 0;
+    }
+}
+
+.dis-header {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #404040;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width:100%;
+    margin:auto
+}
+.dis-header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ffffff;
+    width: 100%;
+}
+
+.dis-header-title span::before {
+    background-image: url('icons/icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 48px;
+    height:48px;
+}
+
+.button-container {
+  display: flex;
+  margin: auto;/* Keep buttons on the right */
+}
+
+.dis-header-title button {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dis-header-title button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.dis-section {
+    padding: 16px 20px;
+    border-bottom: 1px solid #333;
+    transition: background-color 0.2s ease;
+}
+
+.dis-section:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.dis-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.dis-section-header span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 12px;
+    color: #a0a0a0;
+}
+
+/* Add icons for different section types */
+.dis-section-header span[data-type="css"]::before { content: "🎨"; }
+.dis-section-header span[data-type="xpath"]::before { content: "🗂️"; }
+.dis-section-header span[data-type="js"]::before { content: "⚡"; }
+.dis-section-header span[data-type="html"]::before { content: "📝"; }
+.dis-section-header span[data-type="styles"]::before { content: "💅"; }
+
+.dis-section-header button {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dis-section-header button:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.dis-section-header button:active {
+    transform: translateY(0);
+}
+
+.dis-content, pre {
+    background: linear-gradient(135deg, #2d2d2d 0%, #353535 100%);
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+    overflow-x: auto;
+    border: 1px solid #404040;
+    color: #e0e0e0;
+    line-height: 1.5;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+pre {
+    max-height: 200px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* Status indicator */
+.dis-status {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(16, 185, 129, 0.9);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: pulse 2s infinite;
+    z-index: 2147483648;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+#ai-status-bar {
+  width: 100%;
+  padding: 8px 20px 0 20px;
+  box-sizing: border-box;
+  font-size: 13px;
+  color: #cbd5e1;
+  min-height: 20px;
+}
+
+
+/* Element highlight styles */
+.dom-inspector-highlight {
+    outline: 3px solid #3b82f6 !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4) !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Tooltip for hovered elements */
+.dom-inspector-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: monospace;
+    pointer-events: none;
+    z-index: 2147483647;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 300px;
+    word-break: break-all;
+}
+
+/* Loading animation */
+.dis-loading {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #404040;
+    border-radius: 50%;
+    border-top-color: #3b82f6;
+    animation: spin 1s ease-in-out infinite;
+}
+
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Success state for copy buttons */
+.dis-section-header button.success {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    animation: successPulse 0.6s ease;
+}
+
+@keyframes successPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    #dom-inspector-sidebar {
+        width: 100vw;
+        left: 0;
+        right: auto;
+    }
+}
+
+/* Dark theme enhancements */
+@media (prefers-color-scheme: dark) {
+    #dom-inspector-sidebar {
+        background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+    }
+    
+    .dis-content, pre {
+        background: linear-gradient(135deg, #21262d 0%, #30363d 100%);
+        border-color: #30363d;
+    }
+}
